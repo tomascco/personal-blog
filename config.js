@@ -1,45 +1,41 @@
 'use strict';
 
 module.exports = {
-  url: 'https://lumen.netlify.com',
+  url: 'https://tomascco.dev',
   pathPrefix: '/',
-  title: 'Blog by John Doe',
-  subtitle: 'Pellentesque odio nisi, euismod in, pharetra a, ultricies in, diam. Sed arcu.',
+  title: 'Diários de um programador',
+  subtitle: 'Experiências e reflexões sobre programação em geral.',
   copyright: '© All rights reserved.',
   disqusShortname: '',
   postsPerPage: 4,
-  googleAnalyticsId: 'UA-73379983-2',
+  googleAnalyticsId: 'UA-175047061-1',
   useKatex: false,
   menu: [
     {
-      label: 'Articles',
+      label: 'Artigos',
       path: '/'
     },
     {
-      label: 'About me',
+      label: 'Sobre mim',
       path: '/pages/about'
     },
-    {
-      label: 'Contact me',
-      path: '/pages/contacts'
-    }
   ],
   author: {
-    name: 'John Doe',
-    photo: '/photo.jpg',
-    bio: 'Pellentesque odio nisi, euismod in, pharetra a, ultricies in, diam. Sed arcu.',
+    name: 'Tomás Coêlho',
+    photo: '/tomas_thumb.png',
+    bio: 'Engenheiro de Software cursando Engenharia de Computação na UFC.',
     contacts: {
       email: '',
-      facebook: '#',
-      telegram: '#',
-      twitter: '#',
-      github: '#',
+      facebook: '',
+      telegram: 'tomascco',
+      twitter: '',
+      github: 'tomascco',
       rss: '',
       vkontakte: '',
-      linkedin: '#',
-      instagram: '#',
+      linkedin: 'tomás-coelho-16304118b',
+      instagram: '',
       line: '',
-      gitlab: '',
+      gitlab: 'tomascco',
       weibo: '',
       codepen: '',
       youtube: '',
