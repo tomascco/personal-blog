@@ -1,6 +1,7 @@
 // @flow strict
 import React from 'react';
 import moment from 'moment';
+import 'moment/locale/pt-br';
 import { Link } from 'gatsby';
 import type { Edges } from '../../types';
 import styles from './Feed.module.scss';
@@ -8,6 +9,8 @@ import styles from './Feed.module.scss';
 type Props = {
   edges: Edges
 };
+
+moment.locale('pt-br');
 
 const Feed = ({ edges }: Props) => (
   <div className={styles['feed']}>
