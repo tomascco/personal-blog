@@ -1,6 +1,6 @@
 ---
 template: post
-title: Open Source e square bracket methods
+title: Open Source e comportamento
 slug: open-source-e-comportamento
 draft: false
 date: 2020-08-09T23:36:49.752Z
@@ -20,7 +20,7 @@ Foi uma experiência muito boa, pois apesar de simples, tive mais uma ideia do p
 
 A implementação, foi bem simples, mas foi um exercício muito bom de Ruby, de orientação a objetos.
 
-O que fiz, como descrito na [issue](https://github.com/serradura/u-case/issues/59), foi implementar 3 métodos na classe `Micro::Case::Result`, para fazer ela ficar mais parecida como uma hash, apesar de não ser uma. Você poderia me perguntar qual a necessidade de reimplementar os métodos da classe `Hash` em outra classe, por que não simplesmente usar a classe `Hash`? Na minha visão, essa é uma das belezas da programação e uma prática muito boa: utilizar interfaces que já existem (como a Hash) e extender sua funcionalidade com novos comportamentos, que podem ser muito úteis.
+O que fiz, como descrito na [issue](https://github.com/serradura/u-case/issues/59), foi implementar 3 métodos na classe `Micro::Case::Result`, para fazer ela ficar mais parecida como uma hash, apesar de não ser uma. Você poderia me perguntar qual a necessidade de reimplementar os métodos da classe `Hash` em outra classe, por que não simplesmente usar a classe `Hash`? Na minha visão, essa é uma das belezas da programação orientada a objetos e uma prática muito boa: utilizar interfaces que já existem (como a Hash) e extender sua funcionalidade com novos comportamentos (métodos), que podem ser muito úteis.
 
 ## Novos comportamentos
 
