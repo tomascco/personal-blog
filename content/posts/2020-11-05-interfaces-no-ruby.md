@@ -30,7 +30,7 @@ Logo, as funcionalidades apresentadas a seguir, de alguma forma, definem maneira
 
 Assim como o Python com os *[Special Methods](https://docs.python.org/3/reference/datamodel.html#special-method-names)* e a Lua com as *[Metatables](https://www.lua.org/pil/13.html)*, o Ruby também tem uma estratégia para sobrescrever operações básicas como a soma, subtração e acesso por índice (`object[index]` por exemplo).
 
-Porém, diferente das linguagens citadas acima, podemos dizer que a abordagem do Ruby é mais "natural" e intuitiva, pois como quase tudo são objetos:
+Porém, diferente das linguagens citadas acima, podemos dizer que a abordagem do Ruby é mais "natural" e intuitiva, pois quase tudo são objetos:
 
 ```ruby
 1.class # => Integer
@@ -124,10 +124,10 @@ array[0] # => 1
 array.[](2) # => 7
 
 # E as hashes?
-hash = {comida: 'bolo', "idade": 21, 18: 81}
+hash = {comida: 'bolo', "idade" => 21, 18 => 81}
 hash.[](:comida) # => "bolo"
 hash.[] 'idade' # => 21
-hash[21] # => 81
+hash[18] # => 81
 ```
 
 Sim, é isso mesmo que você está pensando. As classes `Array` e `Hash` definem o método `[]`! Note também que o argumento que `[]` recebe pode ser de vários tipos diferentes! Para exemplificar, vamos criar um tipo especial de Array que pode ser acessado com strings:
@@ -303,7 +303,7 @@ class MyArray
 end
 ```
 
-> Note que a linha 11 e 16 são idênticas, você consegue melhorar esse código?
+> Note que há linhas idênticas, você consegue melhorar esse código?
 
 Sim, é isso que eu quero dizer quando digo que o Ruby é intuitivo. Você consegue chutar o que o nosso novo método `[]=` faz? Veja:
 
@@ -325,6 +325,6 @@ Agora podemos modificar o valor da nossa `MyArray`.
 
 ## Conclusão
 
-Nesse post, vimos que podemos reimplementar uma boa parte dos operadores da linguagem, de maneira a criar uma interface comum para classes personalizadas, que incluem novas funcionalidades. Como fizemos no exemplo acima, toda vez que quisermos implementar uma noção de busca e recuperação de dados, podemos implementar os métodos `#[]` e `#[]=`, assim, temos uma interface familiar para nossa classe. Outro exemplo seriam classes com noções de soma, que poderiam implementar o método `+` para fornecer uma interface bem conhecida de qualquer pessoa estudante de matemática!
+Nesse post, vimos que podemos reimplementar uma boa parte dos operadores da linguagem, de maneira a criar uma interface comum para classes personalizadas, que incluem novas funcionalidades. Como fizemos no exemplo acima, toda vez que quisermos implementar uma noção de busca e recuperação de dados, podemos implementar os métodos `#[]` e `#[]=`, assim, temos uma interface familiar (já usada por Arrays e Hashes) para nossa classe. Outro exemplo seriam classes com noções de soma, que poderiam implementar o método `+` para fornecer uma interface bem conhecida de qualquer pessoa estudante de matemática!
 
-Para finalizar, tenho que destacar que esses recursos são muito úteis na construção de bibliotecas e frameworks, porém pouco úteis na programação do dia-a-dia, em que somente **dependemos das interfaces** disponibilizadas e **não precisamos conhecer nenhum detalhe de implementação** desses softwares. Porém, acredito que a partir de hoje você estará um pouco mais apto a criar suas próprias abstrações!
+Para finalizar, tenho que destacar que esses recursos são muito úteis na construção de bibliotecas e frameworks, porém pouco úteis na programação do dia-a-dia, em que somente **dependemos das interfaces** disponibilizadas e **não precisamos conhecer nenhum detalhe de implementação** desses softwares para utiliza-los. Porém, acredito que a partir de hoje você estará um pouco mais apto a criar suas próprias abstrações, bibliotecas e frameworks!
