@@ -279,7 +279,7 @@ person.favorite_food = 'Macarrão'
 
 Apesar de ser difícil encontrar um uso prático para uma atribuição que não atribua nada, é sim possível utilizar essa sintaxe desse jeito. Outro exemplo importante é o seguinte:
 
-> Note que não é uma boa prática implementar _getters_ e _setters_ na mão, pois além de já existirem os métodos _[attr_*](https://ruby-doc.org/core-2.7.2/Module.html#method-i-attr_accessor)_ para não poluir seu código com milhares de linhas redundantes, escrever na marra é [menos performático](https://github.com/JuanitoFatas/fast-ruby#attr_accessor-vs-getter-and-setter-code).
+> Note que não é uma boa prática implementar *getters* e *setters* na mão, pois além de já existirem os métodos *[attr_*](https://ruby-doc.org/core-2.7.2/Module.html#method-i-attr_accessor)* para não poluir seu código com milhares de linhas redundantes, escrever na marra é [menos performático](https://github.com/JuanitoFatas/fast-ruby#attr_accessor-vs-getter-and-setter-code).
 
 ```ruby
 class MyArray
@@ -302,10 +302,10 @@ class MyArray
   end
 end
 ```
+
 > Note que a linha 11 e 16 são idênticas, você consegue melhorar esse código?
 
 Sim, é isso que eu quero dizer quando digo que o Ruby é intuitivo. Você consegue chutar o que o nosso novo método `[]=` faz? Veja:
-
 
 ```ruby
 array = MyArray[0,1,2,3,4]
@@ -320,6 +320,7 @@ array["1"] # => 100
 
 array # => <MyArray @array=[0, 100, 2, 3, 4]>
 ```
+
 Agora podemos modificar o valor da nossa `MyArray`.
 
 ## Conclusão
