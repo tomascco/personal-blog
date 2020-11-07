@@ -162,8 +162,8 @@ array["2"]
 
 array[1.9]
 # => 1
-array[7/3r] # 7/3r é um racional literal e representa exatamente sete terços ou 2,333...
-# => 2
+array[7/3r] # 7/3r é um racional literal e
+# => 2      # representa exatamente sete terços ou 2,333...
 ```
 
 > Mas pera, que dois últimos exemplos foram esses?
