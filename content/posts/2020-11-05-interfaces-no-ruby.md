@@ -279,7 +279,7 @@ person.favorite_food = 'Macarrão'
 
 Apesar de ser difícil encontrar um uso prático para uma atribuição que não atribua nada, é sim possível utilizar essa sintaxe desse jeito. Outro exemplo importante é o seguinte:
 
-> Note que não é uma boa prática implementar *getters* e *setters* na mão, pois além de já existirem os métodos *[attr_*](https://ruby-doc.org/core-2.7.2/Module.html#method-i-attr_accessor)* para não poluir seu código com milhares de linhas redundantes, escrever na marra é [menos performático](https://github.com/JuanitoFatas/fast-ruby#attr_accessor-vs-getter-and-setter-code).
+> Note que não é uma boa prática implementar *getters* e *setters* na mão, pois além de já existirem os métodos *[attr_*](https://ruby-doc.org/core-2.7.2/Module.html#method-i-attr_accessor)* para não poluir seu código com linhas quase idêncitas, escrever na marra é [menos performático](https://github.com/JuanitoFatas/fast-ruby#attr_accessor-vs-getter-and-setter-code).
 
 ```ruby
 class MyArray
