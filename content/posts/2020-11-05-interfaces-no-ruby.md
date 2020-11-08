@@ -1,6 +1,6 @@
 ---
 template: post
-title: Interfaces no Ruby
+title: "Métodos Especiais: Interfaces no Ruby"
 slug: interfaces-no-ruby
 draft: false
 date: 2020-11-05T18:02:08.454Z
@@ -9,6 +9,7 @@ description: Como implementar interfaces no Ruby, já que ele não apresenta uma
 category: Ruby
 tags:
   - Ruby
+  - Interfaces
 ---
 Continuando do [post anterior](https://tomascco.dev/posts/open-source-e-comportamento), que falou sobre classes que usam o método `#[]`, como a `Hash`, iremos aprender como programar para interfaces no Ruby.
 
