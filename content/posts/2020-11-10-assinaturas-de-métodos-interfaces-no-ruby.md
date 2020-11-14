@@ -2,9 +2,11 @@
 template: post
 title: "Assinaturas de métodos: Interfaces no Ruby"
 slug: assinatura-de-metodos
-draft: true
+draft: false
 date: 2020-11-10T17:52:03.281Z
-description: Como as assinaturas de métodos podem nos ajudar a definir interfaces?
+description: Como as assinaturas de métodos podem nos ajudar a definir
+  interfaces? Quais recursos o Ruby oferece para a declaração de métodos e
+  funções?
 category: Ruby
 tags:
   - Ruby
@@ -200,7 +202,7 @@ def request(method: :get, url:); end
 # e passa a ser opcional.
 ```
 
-## *Keywords* arbitrárias
+#### *Keywords* arbitrárias
 
 Assim como podemos receber um número arbitrário de argumentos, também podemos receber palavras-chave arbitrárias utilizando `**` antes do nome do argumento. Com isso, esse argumento recebe uma Hash de *keywords*, veja o exemplo:
 
@@ -217,4 +219,12 @@ improve_grades tomas: 8, aluisio: 9, iury: 9, vinicius: 7
 
 ## Concluindo
 
-Apesar de não termos discutido tudo, espero
+Apesar de não termos tratado de todos os detalhes, vimos quase tudo sobre o que é possível fazer em Ruby quando se trata de declarar métodos expressivos, utilizando o máximo da linguagem.
+
+Podemos afirmar que o bloco básico da linguagem Ruby são os métodos, então saber todos os seus detalhes e possibilidades é essencial para todas as pessoas utilizaradoras de Ruby, além disso, a declaração de métodos também é a base de qualquer interface escrita em Ruby, somando a importância desse tópico.
+
+Para ler a especificação completa e a página de documentação que inspirou (e de onde tirei alguns exemplos) esse post, é só acessar: <https://ruby-doc.org/core-2.7.2/doc/syntax/methods_rdoc.html>.
+
+## Próximos passos
+
+Ao contrário do que se pode imaginar, nós só tratamos de declaração de métodos e isso é bem diferente de invocar eles! Há vários detalhes e coisas interessantes sobre a invocação de um método em Ruby. Um exemplo é o uso do *splat operator* (`*`) e do *keyword splat* (`**`). Para complementar esse post, recomendo imensamente a leitura de outra página da documentação do *core* do Ruby, a <https://ruby-doc.org/core-2.7.2/doc/syntax/calling_methods_rdoc.html>.
