@@ -12,9 +12,9 @@ tags:
 ---
 Com a [chegada iminente do Ruby 3](https://www.ruby-lang.org/pt/news/2020/09/25/ruby-3-0-0-preview1-released/) no natal e a sua promessa de ser [3 vezes mais rápido que o Ruby 2](https://www.youtube.com/watch?v=LE0g2TUsJ4U&t=3248), temos várias ***[breaking changes](https://en.wiktionary.org/wiki/breaking_change)***, isto é, mudanças que podem fazer seu código parar de funcionar!
 
-Uma das mudanças que tem dado mais dor de cabeça nessa transição é a da separação de argumentos posicionais e argumentos *keyword* (palavras-chave).
+Uma das mudanças que tem dado mais dor de cabeça nessa transição é a da separação de argumentos posicionais e argumentos *keyword* (palavras-chave), isto é, a conversão entre esses dois tipos de argumentos só acontece em raros casos.
 
-Aproveitando essa mudança, hoje vamos falar de assinatura de métodos e como elas são importantíssimas para a criação de interfaces.
+Aproveitando essa mudança, hoje vamos falar de assinatura de métodos (respeitando essa mudança do do Ruby 3) e como elas são importantíssimas para a criação de interfaces.
 
 1. [Métodos especiais](https://tomascco.dev/posts/interfaces-no-ruby)
 2. Mixins (em breve...)
@@ -183,7 +183,7 @@ def request(method:, url:)
   request = http_method.new(uri)
   
   connection = Net::HTTP.new(uri.host, uri.port)
-  connection.use_ssl = true
+  connection.use_ssl = true if uri.scheme == 'https'
   
   connection.request(request).read_body
 end
@@ -197,17 +197,24 @@ def request(method: :get, url:); end
 
 # Com isso, o argumento `method`
 # passa a ter o valor padrão `:get`
+# e passa a ser opcional.
 ```
 
-#### *Keywords* arbitrárias
+## *Keywords* arbitrárias
 
 Assim como podemos receber um número arbitrário de argumentos, também podemos receber palavras-chave arbitrárias utilizando `**` antes do nome do argumento. Com isso, esse argumento recebe uma Hash de *keywords*, veja o exemplo:
 
 ```ruby
-def grades(**grades)
-  grades
+ImproveGrade = -> x { x + 1 }
+
+def improve_grades(**grades)
+  grades.transform_values(&ImproveGrade)
 end
 
-grades tomas: 9, aluisio: 10, iury: 10, vinicius: 8
+improve_grades tomas: 8, aluisio: 9, iury: 9, vinicius: 7
 # => {:tomas=>9, :aluisio=>10, :iury=>10, :vinicius=>8}
 ```
+
+## Concluindo
+
+Apesar de não termos discutido tudo, espero
