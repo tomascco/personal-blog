@@ -12,7 +12,7 @@ moment.locale('pt-br');
 
 const Meta = ({ date }: Props) => (
   <div className={styles['meta']}>
-    <p className={styles['meta__date']}>Published {moment(date).format('D MMM YYYY')}</p>
+    <p className={styles['meta__date']}>Publicado em {moment(date).format('D MMM YYYY')}</p>
   </div>
 );
 
