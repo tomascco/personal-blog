@@ -6,7 +6,7 @@ module.exports = {
   title: 'Diários de um programador',
   subtitle: 'Experiências e reflexões sobre programação em geral.',
   copyright: '© All rights reserved.',
-  disqusShortname: '',
+  disqusShortname: 'tomascco-dev',
   postsPerPage: 4,
   googleAnalyticsId: 'UA-175047061-1',
   useKatex: false,
