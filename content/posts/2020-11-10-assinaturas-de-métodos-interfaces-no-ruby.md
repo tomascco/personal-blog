@@ -30,7 +30,7 @@ Segundo a [Wikipedia](https://en.wikipedia.org/wiki/Function_prototype) (minha t
 
 > "A declaração de uma função que especifica seu nome, e assinatura de tipo ([aridade](https://pt.wikipedia.org/wiki/Aridade), tipos de dados, argumentos e tipos de retorno)."
 
-Apesar de essa definição ser mais geral e nós não termos alguns desses elementos nos métodos em Ruby, ela captura bem a ideia a seguinte ideia, também do mesmo artigo:
+Apesar de essa definição ser mais geral e nós não termos alguns desses elementos nos métodos em Ruby, ela captura bem a seguinte ideia, também do mesmo artigo:
 
 > Enquanto o corpo de uma função define **como** ela faz o que faz, sua assinatura especifica sua **interface**, ou seja, quais dados entram e quais dados saem.
 
@@ -101,10 +101,13 @@ metodo(5, 8)
 # enquanto a segunda foi para arg3.
 ```
 
-Apesar de não precisarem estar no começo, os valores padrão devem estar agrupados:
+Apesar de não precisarem estar no começo ou no final, os valores padrão devem estar agrupados:
 
 ```ruby
 def add_values(a, b = 1, c = 1); end
+# Ok
+
+def add_value(a, b = 1, c = 2, d); end
 # Ok
 
 def add_values(a = 1, b, c = 1); end
@@ -140,23 +143,23 @@ def metodo_a(*a, b, c)
   p a, b, c
 end
 
-def metodo_b(a, *b, c)
-  p a, b, c
-end
-
-def metodo_c(a, b, *c)
-  p a, b, c
-end
-
 metodo_a(1, 2, 3, 4, 5)
 # [1, 2, 3]
 # 4
 # 5
 
+def metodo_b(a, *b, c)
+  p a, b, c
+end
+
 metodo_b(1, 2, 3, 4, 5)
 # 1
 # [2, 3, 4]
 # 5
+
+def metodo_c(a, b, *c)
+  p a, b, c
+end
 
 metodo_c(1, 2, 3, 4, 5)
 # 1
@@ -207,10 +210,10 @@ def request(method: :get, url:); end
 Assim como podemos receber um número arbitrário de argumentos, também podemos receber palavras-chave arbitrárias utilizando `**` antes do nome do argumento. Com isso, esse argumento recebe uma Hash de *keywords*, veja o exemplo:
 
 ```ruby
-ImproveGrade = -> x { x + 1 }
-
 def improve_grades(**grades)
-  grades.transform_values(&ImproveGrade)
+  grades.transform_values do |grade|
+    grade + 1
+  end
 end
 
 improve_grades tomas: 8, aluisio: 9, iury: 9, vinicius: 7
@@ -228,3 +231,7 @@ Para ler a especificação completa e a página de documentação que inspirou (
 ## Próximos passos
 
 Ao contrário do que se pode imaginar, nós só tratamos de declaração de métodos e isso é bem diferente de invocar eles! Há vários detalhes e coisas interessantes sobre a invocação de um método em Ruby. Um exemplo é o uso do *splat operator* (`*`) e do *keyword splat* (`**`). Para complementar esse post, recomendo imensamente a leitura de outra página da documentação do *core* do Ruby, a <https://ruby-doc.org/core-2.7.2/doc/syntax/calling_methods_rdoc.html>.
+
+## Agradecimentos
+
+Queria agradecer ao [@serradura](https://github.com/serradura/) por ajudar na revisão e pelo apoio que sempre deu para todas as minhas ideias e iniciativas, ao [Aluísio](https://www.linkedin.com/in/alu%C3%ADsio-alves-a8735a197/) por também ajudar na revisão. Muito obrigado!
