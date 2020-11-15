@@ -40,8 +40,8 @@ exports[`Post renders correctly 1`] = `
       <p
         className="meta__date"
       >
-        Published 
-        1 Sep 2016
+        Publicado em 
+        1 set 2016
       </p>
     </div>
     <div
@@ -80,15 +80,15 @@ exports[`Post renders correctly 1`] = `
       >
         Test bio
         <a
-          className="author__bio-twitter"
-          href="https://www.twitter.com/#"
+          className="author__bio-github"
+          href="https://github.com/#"
           rel="noopener noreferrer"
           target="_blank"
         >
           <strong>
             Test name
           </strong>
-           on Twitter
+           em Github
         </a>
       </p>
     </div>
