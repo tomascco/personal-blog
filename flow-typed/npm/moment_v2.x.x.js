@@ -399,3 +399,6 @@ declare class moment$Moment {
 declare module "moment" {
   declare module.exports: Class<moment$Moment>;
 }
+declare module "moment/locale/pt-br" {
+  declare module.exports: any;
+}
