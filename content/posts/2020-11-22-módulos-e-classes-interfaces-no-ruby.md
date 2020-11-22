@@ -126,6 +126,7 @@ module Playable
     sound
   end
 end
+
 class Dog
   include Playable
 
@@ -170,14 +171,218 @@ Module.class
 
 Porém o intuito é mostrar que as classes em Ruby são superclasse, ou seja, herdam de `Module`. Isso significa que todos os métodos de instância de [Module](https://ruby-doc.org/core-2.7.2/Module.html#method-c-used_modules) podem ser usados em classes. Um exemplo disso são os métodos `attr_accessor`, `include`, `private`, entre outros.
 
-Assim como módulos, podem ser *namespace*:
+> Note que apesar disso, classes não podem ser incluídas como *mixins*.
+
+Da mesma maneira que módulos, classes podem ser *namespace*:
 
 ```ruby
 class Mammals
   class Dog
+    attr_reader :name
+    
+    def initialize(name:)
+      @name = name
+    end
+  end
+  
+  class Cat
+    attr_reader :name
+    
+    def initialize(name:)
+      @name = name
+    end
+  end
+  
+  attr_reader :collection
+  
+  def initialize(collection)
+    @collection = collection
   end
 end
 
-Mammals::Dog.new
-# => <A::B::C>
+bud = Mammals::Dog.new name: 'Bud'
+# => <Mammals::Dog @name="Bud">
+meowth = Mammals::Cat.new name: 'Meowth'
+# => <Mammals::Cat @name="Meowth">
+
+my_animals = Mammals.new([bud, meowth])
+# => <Mammals @collection=[<Mammals::Dog @name="Bud">, <Mammals::Cat @name="Meowth">]>
 ```
+
+Também podemos misturar classes e módulos sem nenhum problema:
+
+```ruby
+class A
+  module B
+    class C
+      def initialize
+        'hi'
+      end
+    end
+  end
+end
+
+A::B::C.new
+# => "hi"
+```
+
+Outra diferença entre classes e módulos é que a classe também herda métodos e constantes de sua superclasse:
+
+```ruby
+class A
+  Z = 1
+
+  def z
+    Z
+  end
+end
+
+class B < A
+end
+
+b = B.new
+b.z
+# => 1
+```
+
+Além disso, outros detalhes da Orientação a Objetos também se aplicam, como a sobrescrita de métodos e a utilização da palavra reservado `super`.
+
+## Constantes
+
+Apesar de não parecer muito relacionado com esses dois conceitos que acabamos de ver, entender constantes em Ruby é essencial para utilizar classes e módulos de maneira efetiva, além de nos ensinar um pouco sobre o funcionamento interno da linguagem.
+
+Uma das justificativas para esse ponto é que classes e módulos não são nada mais que instâncias de `Class` e `Module` atribuidas a constantes, veja:
+
+```ruby
+class A
+end
+# é exatamente a
+# mesma coisa de:
+A = Class.new
+
+# ou
+
+module B
+end
+# ==
+B = Module.new
+```
+
+Nas duas formas a propriedade `#name` é atribuída com o nome da constante com que foi associada e nunca muda:
+
+```ruby
+String.name
+# => "String"
+
+# porém
+
+MyString = String
+
+MyString.name
+# => "String"
+```
+
+Outra coisa para lembrarmos é que constantes são identificadores que não podem ser reatribuídos, porém **podem ser modificados**.
+
+```ruby
+NUMBERS = [1, 2, 3, 4]
+NUMBERS.delete_at(0)
+
+NUMBERS
+# => [2, 3, 4]
+
+# constantes podem guardar
+# qualquer tipo de objeto.
+LAMBDA = ->x,y {x + y}
+# => <Proc (lambda)>
+STRING = 'olá'
+# => "olá"
+```
+
+Por último, vale lembrar que as constantes são armazenadas e pertencem a módulos (lembrando que classes também são módulos!)
+
+### Contexto e resolução de constantes
+
+Como virmos anteriormente, módulos e classes alteram o contexto de execução ao definirem *namespaces*, logo é natural que passemos a nos preocupar com quais constantes estão acessíveis no contexto atual e quais não estão, pois não queremos introduzir erros e bugs nas nossas aplicações.
+
+Os exemplos a seguir mostra como apesar de simples, podemos facilmente levar erros na cara ao lidar com constantes:
+
+```ruby
+Z = 1
+
+module A
+  Z = 100
+  module B
+    p Z # escreve 100
+  end
+end
+
+module C
+  X = 3
+  module D
+    p X # escreve 3
+  end
+end
+# porém
+module C::D
+  p X # dá erro
+end
+```
+
+#### *Nesting*
+
+Sendo mais ou menos o que chamamos de contexto, `Module.nesting` é um método que nos informa em qual contexto estamos e portanto, quais constantes estão disponíveis.
+
+```ruby
+module A
+  Z = 20
+  module B
+    Module.nesting # => [A::B, A]
+    p Z # => 20
+  end
+end
+
+module A::B
+  Module.nesting # => [A::B]
+  p Z # dá erro pois A não
+end   # está no Module.nesting
+
+```
+
+Com isso podemos concluir que apesar de estarmos em um contexto bastante aninhado, ainda assim podemos acessar as constantes de outros contextos, desde que o aninhamento esteja explícito:
+
+```ruby
+module A
+  X = 19
+  module B
+    module C
+      module D
+      end
+    end
+  end
+end
+
+module A::B
+  module C::D
+    Module.nesting
+    # => [A::B::C::D, A::B]
+    p X # dá erro, pois A 
+  end   # não está no nesting
+end
+
+module A
+  module B::C::D
+    Module.nesting
+    # => [A::B::C::D, A]
+    p X # => 19
+  end
+end
+```
+
+Vemos que não precisamos abrir todos os módulos, um de cada vez, para não levarmos erros, só precisamos abrir o módulo em que a constante está definida.
+
+### Constantes relativas
+
+São constantes chamadas sem nenhum prefixo, como as do exemplo anterior.
+
+Sua resolução, como vimos,
