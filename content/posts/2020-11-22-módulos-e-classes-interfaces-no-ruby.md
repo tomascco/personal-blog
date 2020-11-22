@@ -530,4 +530,42 @@ Em objetos da classe `Net::HTTP::(Get|Post)` são guardadas informações da req
 
 ### *Mixins*
 
-Nesse exemplo, vamos criar pontos no espaço cartesiano e uma coleção de pontos, que irão ser comparados pelo seu módulo.
+Nesse exemplo, vamos criar pontos no espaço cartesiano e uma coleção de pontos, que irão ser comparados pelo seu módulo. Para isso utilizaremos os dois *mixins* oferecidos pelo Ruby
+
+```ruby
+Distance = ->x,y { Math.sqrt(x**2 + y**2) }
+
+class Points
+  include Enumerable
+
+  class Point
+    include Comparable
+    
+    attr_reader :x, :y
+    
+    def initialize(x, y)
+      @x = x
+      @y = y
+    end
+    
+    def <=>(other)
+      Distance[x, y] <=> Distance[other.x, other.y]
+    end
+  end
+  
+  attr_reader :collection
+  
+  def initialize(collection)
+    @collection = collection
+  end
+  
+  def each
+    @collection.each do |point|
+      yield point.x, point.y
+    end
+  end
+end
+
+```
+
+N
