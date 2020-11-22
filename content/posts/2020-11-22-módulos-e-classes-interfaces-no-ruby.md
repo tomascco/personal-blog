@@ -2,7 +2,7 @@
 template: post
 title: "Módulos, Classes e Constantes: Interfaces no Ruby"
 slug: modulos-classes-e-constantes
-draft: false
+draft: true
 date: 2020-11-22T13:32:54.983Z
 description: Quais são as diferenças entre Módulos e Classes? Quando usar um e
   quando usar outro? Qual é a relação entre esses dois e Constantes?
@@ -29,4 +29,17 @@ Logo, podemos começar a estudar quais ferramentas o Ruby oferece para a organiz
 4. Blocos (em breve...)
 5. [Assinaturas de métodos](https://tomascco.dev/posts/assinatura-de-metodos)
 
-## [Módulos](https://ruby-doc.org/core-2.7.2/Module.html)
+## Módulos
+
+Definidos pela [documentação](https://ruby-doc.org/core-2.7.2/Module.html) simplesmente como "coleções de métodos e constantes", os módulos servem para agrupar código, que também segundo a documentação, pode servir de *namespace* ou como mixin (que falaremos mais adiante).
+
+```ruby
+module Sounds
+  DOG = 'bark'
+  
+  def self.play(sound)
+    puts sound
+  end
+  
+  def 
+```
