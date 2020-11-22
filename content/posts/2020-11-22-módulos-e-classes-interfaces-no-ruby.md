@@ -346,7 +346,6 @@ module A::B
   Module.nesting # => [A::B]
   p Z # dá erro pois A não
 end   # está no Module.nesting
-
 ```
 
 Com isso podemos concluir que apesar de estarmos em um contexto bastante aninhado, ainda assim podemos acessar as constantes de outros contextos, desde que o aninhamento esteja explícito:
@@ -381,8 +380,154 @@ end
 
 Vemos que não precisamos abrir todos os módulos, um de cada vez, para não levarmos erros, só precisamos abrir o módulo em que a constante está definida.
 
-### Constantes relativas
+#### Constantes relativas
 
 São constantes chamadas sem nenhum prefixo, como as do exemplo anterior.
 
-Sua resolução, como vimos,
+Sua resolução, como vimos (em parte) se dá da seguinte maneira:
+
+1. Procura-se a constante nos elementos de `Module.nesting`;
+2. Procura-se a constante nas sua superclasse e outros ancestrais (`self.ancestors`);
+3. Se não encontrada em nenhum dos passos, chama-se o método `const_missing` (similar ao `method_missing`).
+
+Logo, podemos ver como a herança e o contexto dão acesso às constantes.
+
+#### Constantes qualificadas
+
+São aquelas que tem uma constante relativa na frente, como `A::X` do exemplo anterior, em que `A` é uma referência relativa e `X` uma constante qualificada.
+
+Sua resolução inclui:
+
+1. Procurar `A` (referência relativa) com no algoritmo anterior;
+2. Procurar `X` (referência qualificada) nos ancestrais de `A` (referência relativa);
+3. Se não encontrada, chamar o método `const_missing` de `A`.
+
+Exemplo (considerando o exemplo anterior):
+
+```ruby
+module E
+  Z = 1
+  module F
+    Z = 2
+
+    Z # => 2
+    E::Z # => 1
+  end
+end
+```
+
+#### Contexto global e referências absolutas
+
+No exemplo anterior para referenciar `Z` do módulo `F`, utilizamos uma referência relativa, para referênciar `Z` do módulo `E`, usamos `E::Z`. Porém, e se quiséssemos acessar uma constante `Z` definida no escopo global?
+
+Para isso, podemos utilizar `::` antes do nome da constante. Logo, reabrindo os módulos do exemplo anterior:
+
+```ruby
+Z = 0
+
+module E
+  module F
+    Z # => 2
+    E::Z # => 1
+    ::Z # => 0
+  end
+end
+```
+
+## Exemplos e casos de uso
+
+Como já vimos bastante coisa até agora, vamos ver alguns exemplos práticos.
+
+### Funções utilitárias
+
+É bem provável que você já tenha se deparado com blocos de código que não dependem do estado ou da instância de nenhum objeto, mesmo assim se encontram em classes. Isso pode ser considerado um *[code smell](https://github.com/troessner/reek/blob/master/docs/Utility-Function.md)*, pois se o código não depende do objeto, não há porque seu uso depender de uma instância. Códigos como:
+
+```ruby
+class Calculator
+  def sum(a, b)
+    a + b
+  end
+  
+  def mult(a, b)
+    a * b
+  end
+end
+
+calc = Calculator.new
+
+calc.sum(1, 3)
+# => 4
+```
+
+São candidatos fortes para a refatoração, porém, como podemos fazer isso com os recursos que acabamos de aprender?
+
+Como não precisamos de instâncias, podemos utilizar um módulo e métodos de classe:
+
+```ruby
+module Calculator
+  class << self
+    def sum(a, b)
+      a + b
+    end
+    
+    def mult(a, b)
+      a * b
+    end
+  end
+end
+
+Calculator.sum(1, 2)
+# => 3
+ 
+# Outra opção:
+
+module Calculator
+  Sum = ->x,y {x + y}
+  Mult = ->x,y { x * y }
+end
+
+Calculator::Sum[1, 3]
+# => 4
+
+# ou
+Calculator::Mult.call(1, 3)
+# => 3
+
+# ou
+Calculator::Mult.(4, 5)
+# => 20
+```
+
+Desse jeito, outros contextos podem reutilizar nossas definições, muito melhor 😊
+
+### Classes como *namespaces*
+
+Em quais situações é válido usar classes como *namespaces*? Aproveitando código da postagem passada, podemos ver um exemplo da própria biblioteca padrão do Ruby: a classe `Net::HTTP`
+
+```ruby
+require 'net/http'
+
+HTTP_METHODS = {
+  get: Net::HTTP::Get,
+  post: Net::HTTP::Post
+}.freeze
+
+def request(method:, url:)
+  uri = URI(url)
+  http_method = HTTP_METHODS.fetch(method)
+  request = http_method.new(uri)
+  
+  connection = Net::HTTP.new(uri.host, uri.port)
+  connection.use_ssl = true if uri.scheme == 'https'
+  
+  connection.request(request).read_body
+end
+```
+
+Nesse código é possível observar que para realizar a requisição, nós tivemos que instanciar dois objetos, `Net::HTTP::Get` ou `Net::HTTP::Post` (dependendo da variável `http_method`) e `Net::HTTP`.
+
+Em objetos da classe `Net::HTTP::(Get|Post)` são guardadas informações da requisição, como corpo, *headers* e o caminho da requisição. Já objetos da classe `Net::HTTP` estão relacionados com a própria conexão TCP e podem ser usados para controlar quando a conexão é fechada (útil para fazer várias requisições de uma vez).
+
+### *Mixins*
+
+Nesse exemplo, vamos criar pontos no espaço cartesiano e uma coleção de pontos, que irão ser comparados pelo seu módulo.
