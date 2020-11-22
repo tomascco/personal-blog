@@ -34,6 +34,7 @@ Logo, podemos começar a estudar quais ferramentas o Ruby oferece para a organiz
 Definidos pela [documentação](https://ruby-doc.org/core-2.7.2/Module.html) simplesmente como "coleções de métodos e constantes", os módulos servem para agrupar código, que também segundo a documentação, pode servir de *namespace* ou como mixin (que falaremos mais adiante).
 
 ```ruby
+# exemplo de módulo
 module Sounds
   DOG = 'bark'
   
@@ -41,5 +42,12 @@ module Sounds
     puts sound
   end
   
-  def 
+  def cat
+    'purrrrrrr'
+  end
+end
 ```
+
+### Módulos como *namespace*
+
+*[Namespaces](https://en.wikipedia.org/wiki/Namespace#In_programming_languages)* são contextos
