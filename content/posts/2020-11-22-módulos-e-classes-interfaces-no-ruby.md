@@ -674,3 +674,7 @@ Apesar dessa postagem ser exaustiva, vários detalhes ficaram de fora. Por isso,
 ## Agradecimentos
 
 Gostaria de agradecer mais uma vez ao [@serradura](https://github.com/serradura/) que me incentivou muito a escrever sobre isso e por sempre me ajudar com sugestões e dicas para a [minha gem](https://github.com/tomascco/pokecli). Obrigado!
+
+
+
+> Qualquer dúvida, erro, feedback ou sugestão são bem vindos nos comentários 😁😁😁
