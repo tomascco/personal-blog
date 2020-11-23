@@ -19,7 +19,7 @@ Entre essas dificuldades, posso destacar uma que tem tudo a ver com interfaces e
 
 Acredito que para quem está começando essas dificuldades são extremamente comuns (como foram para mim) e se relacionam muito com a essência da própria Engenharia de Software, sendo citadas em quase todos os conteúdos sobre o assunto.
 
-Nesse post, como sempre, não pretendo ditar como e quando cada ferramente deve ser utilizada, pois não me sinto capacitado para isso, além de [não existir bala de prata](https://en.wikipedia.org/wiki/No_Silver_Bullet) que resolva todas situações; cada caso é um caso!
+Nesse post, como sempre, não pretendo ditar como e quando cada ferramenta deve ser utilizada, pois não me sinto capacitado para isso, além de [não existir bala de prata](https://en.wikipedia.org/wiki/No_Silver_Bullet) que resolva todas situações; cada caso é um caso!
 
 Logo, podemos começar a estudar quais ferramentas o Ruby oferece para a organização do código de maneira geral.
 
@@ -31,7 +31,7 @@ Logo, podemos começar a estudar quais ferramentas o Ruby oferece para a organiz
 
 ## Módulos
 
-Definidos pela [documentação](https://ruby-doc.org/core-2.7.2/Module.html) simplesmente como "coleções de métodos e constantes", os módulos servem para agrupar código, que também segundo a documentação, pode servir de *namespace* ou como mixin (que falaremos mais adiante).
+Definidos pela [documentação](https://ruby-doc.org/core-2.7.2/Module.html) simplesmente como "coleções de métodos e constantes", os módulos servem para agrupar código, que também segundo a documentação, pode servir de *namespace* ou como *mixin* (que falaremos mais adiante).
 
 ```ruby
 # exemplo de módulo
@@ -66,7 +66,7 @@ Different::X
 # => 1
 ```
 
-Outro detalhe é que os métodos definidos com `self` ou com a sintaxe `class << self; end` são considerados métodos de classe (ou de módulo) e podem ser chamados diretamente:
+Outro detalhe é que os métodos definidos com `self` são considerados métodos de classe (ou de módulo) e podem ser chamados diretamente:
 
 ```ruby
 # módulos podem ser "reabertos"
@@ -76,10 +76,8 @@ module Different
     X + other
   end
   
-  class << self
-    def times_x(other)
-      X * other
-    end
+  def times_x(other)
+    X * other
   end
 end
 
@@ -116,7 +114,7 @@ A::B::C.hi
 
 ### *Mixins*
 
-Apesar da linguagem Ruby não apresentar herança múltipla, é possível extender classes para além de sua herança com essa funcionalidade, em que os todos os métodos de instância e constantes de um módulo são incluídas em uma classe:
+Apesar da linguagem Ruby não apresentar herança múltipla, é possível extender classes para além de sua herança com essa funcionalidade, em que os todos os métodos de instância e constantes de um módulo incluído são incluídas em uma classe:
 
 ```ruby
 module Playable
@@ -147,13 +145,13 @@ Nesse exemplo, quando o *mixin* `Playable` é incluído em `Dog`, os métodos de
 
 > Note que acabamos de criar mais um tipo de interface, pois o módulo `Playable` espera que a classe em que foi incluída defina o método `sound`. Se esse método não for definido, `play` falhará.
 
-A própria biblioteca padrão do Ruby se utiliza de *mixins*, que são extramemente úteis, o [Enumerable](https://ruby-doc.org/core-2.7.2/Enumerable.html) e o [Comparable](https://ruby-doc.org/core-2.7.2/Comparable.html), que definem vários métodos, porém dependem da implementação dos métodos `#each` e `#<=>` para funcionarem.
+A própria biblioteca padrão do Ruby disponibiliza dois *mixins* extramemente úteis, o [Enumerable](https://ruby-doc.org/core-2.7.2/Enumerable.html) e o [Comparable](https://ruby-doc.org/core-2.7.2/Comparable.html), que definem vários métodos, porém dependem da implementação dos métodos `#each` e `#<=>` respectivamente para funcionar.
 
 ## Classes
 
-Apesar de já termos usado classes nos exemplos anteriores, sempre é bom começarmos do começo.
+Apesar de já termos usado classes nos exemplos anteriores, sempre é bom começarmos do básico.
 
-[Classes](https://pt.wikipedia.org/wiki/Classe_(programa%C3%A7%C3%A3o)) são o molde para a criação de objetos e definem propriedades e comportamentos. Porém, em Ruby, classes também são objetos (da classe `Class`) e tem como superclasse a classe `Module`, que é a classe dos módulos que estudamos acima. E sim, isso é extremamante confuso 🤔
+[Classes](https://pt.wikipedia.org/wiki/Classe_(programa%C3%A7%C3%A3o)) são o molde para a criação de objetos e definem propriedades e comportamentos. Porém, em Ruby, classes também são objetos (da classe `Class`) e tem como superclasse a classe `Module`, que é a classe utilizada como molde para criar os módulos que estudamos acima. E sim, isso é extremamante confuso 🤔
 
 ```ruby
 class Animal
@@ -169,7 +167,7 @@ Module.class
 # => Class
 ```
 
-Porém o intuito é mostrar que as classes em Ruby são superclasse, ou seja, herdam de `Module`. Isso significa que todos os métodos de instância de [Module](https://ruby-doc.org/core-2.7.2/Module.html#method-c-used_modules) podem ser usados em classes. Um exemplo disso são os métodos `attr_accessor`, `include`, `private`, entre outros.
+Porém, o intuito é mostrar que as classes em Ruby são superclasse, ou seja, herdam de `Module`. Isso significa que todos os métodos de instância de [Module](https://ruby-doc.org/core-2.7.2/Module.html) podem ser usados em classes. Um exemplo disso são os métodos `attr_accessor`, `include`, `private`, entre outros.
 
 > Note que apesar disso, classes não podem ser incluídas como *mixins*.
 
@@ -229,6 +227,8 @@ A::B::C.new
 Outra diferença entre classes e módulos é que a classe também herda métodos e constantes de sua superclasse:
 
 ```ruby
+# exemplo tirado da
+# documentação oficial.
 class A
   Z = 1
 
@@ -305,7 +305,7 @@ Por último, vale lembrar que as constantes são armazenadas e pertencem a módu
 
 Como virmos anteriormente, módulos e classes alteram o contexto de execução ao definirem *namespaces*, logo é natural que passemos a nos preocupar com quais constantes estão acessíveis no contexto atual e quais não estão, pois não queremos introduzir erros e bugs nas nossas aplicações.
 
-Os exemplos a seguir mostra como apesar de simples, podemos facilmente levar erros na cara ao lidar com constantes:
+Os exemplos a seguir mostram como apesar de simples, podemos facilmente levar erros na cara ao lidar com constantes:
 
 ```ruby
 Z = 1
@@ -316,6 +316,8 @@ module A
     p Z # escreve 100
   end
 end
+
+# --
 
 module C
   X = 3
@@ -398,13 +400,14 @@ São aquelas que tem uma constante relativa na frente, como `A::X` do exemplo an
 
 Sua resolução inclui:
 
-1. Procurar `A` (referência relativa) com no algoritmo anterior;
+1. Procurar `A` (referência relativa) como no algoritmo anterior;
 2. Procurar `X` (referência qualificada) nos ancestrais de `A` (referência relativa);
 3. Se não encontrada, chamar o método `const_missing` de `A`.
 
 Exemplo (considerando o exemplo anterior):
 
 ```ruby
+Z = 0
 module E
   Z = 1
   module F
@@ -418,13 +421,11 @@ end
 
 #### Contexto global e referências absolutas
 
-No exemplo anterior para referenciar `Z` do módulo `F`, utilizamos uma referência relativa, para referênciar `Z` do módulo `E`, usamos `E::Z`. Porém, e se quiséssemos acessar uma constante `Z` definida no escopo global?
+No exemplo anterior para referenciar `Z` do módulo `F`, utilizamos uma referência relativa, para referênciar `Z` do módulo `E`, usamos `E::Z`. Porém, e se quiséssemos acessar a constante `Z` definida no escopo global?
 
-Para isso, podemos utilizar `::` antes do nome da constante. Logo, reabrindo os módulos do exemplo anterior:
+Para isso, podemos utilizar `::` antes do nome da constante para acessar o contexto principal de maneira absoluta. Logo, reabrindo os módulos do exemplo anterior:
 
 ```ruby
-Z = 0
-
 module E
   module F
     Z # => 2
@@ -440,7 +441,7 @@ Como já vimos bastante coisa até agora, vamos ver alguns exemplos práticos.
 
 ### Funções utilitárias
 
-É bem provável que você já tenha se deparado com blocos de código que não dependem do estado ou da instância de nenhum objeto, mesmo assim se encontram em classes. Isso pode ser considerado um *[code smell](https://github.com/troessner/reek/blob/master/docs/Utility-Function.md)*, pois se o código não depende do objeto, não há porque seu uso depender de uma instância. Códigos como:
+É bem provável que você já tenha se deparado com blocos de código que não dependem do estado ou da instância de nenhum objeto, mesmo assim se encontram em classes. Isso pode ser considerado um *[code smell](https://github.com/troessner/reek/blob/master/docs/Utility-Function.md)*, pois se o código não depende do objeto, não há porque seu uso depender de um instanciamento. Códigos como:
 
 ```ruby
 class Calculator
@@ -524,13 +525,13 @@ def request(method:, url:)
 end
 ```
 
-Nesse código é possível observar que para realizar a requisição, nós tivemos que instanciar dois objetos, `Net::HTTP::Get` ou `Net::HTTP::Post` (dependendo da variável `http_method`) e `Net::HTTP`.
+Nesse código é possível observar que para realizar a requisição, nós tivemos que instanciar dois objetos, `Net::HTTP::Get`, `Net::HTTP::Post` (dependendo do valor da variável `http_method`) e `Net::HTTP`.
 
-Em objetos da classe `Net::HTTP::(Get|Post)` são guardadas informações da requisição, como corpo, *headers* e o caminho da requisição. Já objetos da classe `Net::HTTP` estão relacionados com a própria conexão TCP e podem ser usados para controlar quando a conexão é fechada (útil para fazer várias requisições de uma vez).
+Em objetos da classe `Net::HTTP::(Get|Post)` são guardadas informações da requisição, como corpo, cabeçalhos e o caminho da requisição. Já objetos da classe `Net::HTTP` estão relacionados com a própria conexão TCP e podem ser usados para controlar quando a conexão é fechada (útil para fazer várias requisições de uma vez com a mesma conexão).
 
-### *Mixins*
+### Utilizando *Mixins* e misturando tudo
 
-Nesse exemplo, vamos criar pontos no espaço cartesiano e uma coleção de pontos, que irão ser comparados pelo seu módulo. Para isso utilizaremos os dois *mixins* oferecidos pela biblioteca padrão do Ruby.
+Nesse exemplo, vamos criar pontos no espaço cartesiano e uma coleção de pontos, que irão ser comparados pelo seu módulo (comprimento). Para isso utilizaremos os dois *mixins* oferecidos pela biblioteca padrão do Ruby.
 
 ```ruby
 class Points
@@ -548,7 +549,7 @@ class Points
     
     # sobrescreve a conversão explícita
     # para array com *. Exemplos serão
-    # discutidos.
+    # apresentados.
     def to_a
       [x, y]
     end
@@ -560,13 +561,14 @@ class Points
     end
   end
   
-  # módulo; comprimento do vetor
+  # Módulo do vetor
   Module = ->x,y { Math.sqrt(x**2 + y**2) }
   
   attr_reader :collection
   
   # mesmo código da postagem
-  # passada
+  # passada para facilitar
+  # o instanciamento
   def self.[](*args)
     new(args)
   end
@@ -583,11 +585,11 @@ class Points
 end
 ```
 
-Exemplo inspirado por: <https://stackoverflow.com/a/9470563>. Para que o exemplo fiquei mais completo, foram utilizados alguns recursos que já foram vistos e outros que ainda serão discutidos.
+Para que o exemplo ficasse mais completo, foram utilizados alguns recursos que já foram vistos e outros que ainda serão discutidos.
 
 A seguir vamos ver algumas explicações.
 
-Para implementar sua própria função de comparação (`<=>`), necessária para o module `Comparable` é necessário se atentar ao seu comportamento esperado:
+Para implementar sua própria função de comparação (`<=>`), necessária para o módulo `Comparable`, é necessário se atentar ao seu comportamento esperado:
 
 ```ruby
 # se a > b
@@ -603,19 +605,15 @@ a <=> b
 # => 0
 ```
 
-Porém, nesse exemplo, aplicamos a função `Module` e delegamos o resultado dessa operação para o método `<=>` da classe `Float`.
+Porém, nesse exemplo, aplicamos a função `Points::Module` e delegamos o resultado dessa operação para o método `<=>` da classe `Float`.
 
 Já o módulo `Enumerable` é pensado para objetos que implementam a noção de algum tipo de coleção, como nossa classe `Points`. A especificação que nós precisamos atender para usar esse módulo é a implementação de um método `each` que dê yield em todos os elementos de sua coleção sucessivamente, um exemplo de código com essa funcionalidade é o seguinte:
 
 ```ruby
 def each
-  collection_size.times do
+  while next_item
     yield next_item
   end
-end
-
-def collection_size
-  # calcula o tamanho da coleção...
 end
 
 def next_item
@@ -623,7 +621,7 @@ def next_item
 end
 ```
 
-Porém, no nosso exemplo, também delegamos o método `each`, dessa vez para `@collection`.
+Porém, no nosso exemplo, também delegamos o método `each`, dessa vez para `@collection`, que é instância de `Array`.
 
 Dadas essas explicações, podemos testar:
 
