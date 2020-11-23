@@ -2,7 +2,7 @@
 template: post
 title: "Módulos, Classes e Constantes: Interfaces no Ruby"
 slug: modulos-classes-e-constantes
-draft: true
+draft: false
 date: 2020-11-22T13:32:54.983Z
 description: Quais são as diferenças entre Módulos e Classes? Quando usar um e
   quando usar outro? Qual é a relação entre esses dois e Constantes?
@@ -530,11 +530,9 @@ Em objetos da classe `Net::HTTP::(Get|Post)` são guardadas informações da req
 
 ### *Mixins*
 
-Nesse exemplo, vamos criar pontos no espaço cartesiano e uma coleção de pontos, que irão ser comparados pelo seu módulo. Para isso utilizaremos os dois *mixins* oferecidos pelo Ruby
+Nesse exemplo, vamos criar pontos no espaço cartesiano e uma coleção de pontos, que irão ser comparados pelo seu módulo. Para isso utilizaremos os dois *mixins* oferecidos pela biblioteca padrão do Ruby.
 
 ```ruby
-Distance = ->x,y { Math.sqrt(x**2 + y**2) }
-
 class Points
   include Enumerable
 
@@ -548,24 +546,133 @@ class Points
       @y = y
     end
     
+    # sobrescreve a conversão explícita
+    # para array com *. Exemplos serão
+    # discutidos.
+    def to_a
+      [x, y]
+    end
+    
+    # definição obrigatória para os métodos de
+    # Comparable funcionarem
     def <=>(other)
-      Distance[x, y] <=> Distance[other.x, other.y]
+      Module[x, y] <=> Module[other.x, other.y]
     end
   end
   
+  # módulo; comprimento do vetor
+  Module = ->x,y { Math.sqrt(x**2 + y**2) }
+  
   attr_reader :collection
+  
+  # mesmo código da postagem
+  # passada
+  def self.[](*args)
+    new(args)
+  end
   
   def initialize(collection)
     @collection = collection
   end
   
-  def each
-    @collection.each do |point|
-      yield point.x, point.y
-    end
+  # definição obrigatória para os
+  # métodos de Enumerable funcionarem
+  def each(&block)
+    @collection.each(&block)
+  end
+end
+```
+
+Exemplo inspirado por: <https://stackoverflow.com/a/9470563>. Para que o exemplo fiquei mais completo, foram utilizados alguns recursos que já foram vistos e outros que ainda serão discutidos.
+
+A seguir vamos ver algumas explicações.
+
+Para implementar sua própria função de comparação (`<=>`), necessária para o module `Comparable` é necessário se atentar ao seu comportamento esperado:
+
+```ruby
+# se a > b
+a <=> b
+# => 1
+
+# se a < b
+a <=> b
+# => -1
+
+# se a == b
+a <=> b
+# => 0
+```
+
+Porém, nesse exemplo, aplicamos a função `Module` e delegamos o resultado dessa operação para o método `<=>` da classe `Float`.
+
+Já o módulo `Enumerable` é pensado para objetos que implementam a noção de algum tipo de coleção, como nossa classe `Points`. A especificação que nós precisamos atender para usar esse módulo é a implementação de um método `each` que dê yield em todos os elementos de sua coleção sucessivamente, um exemplo de código com essa funcionalidade é o seguinte:
+
+```ruby
+def each
+  collection_size.times do
+    yield next_item
   end
 end
 
+def collection_size
+  # calcula o tamanho da coleção...
+end
+
+def next_item
+  # resgata o próximo item...
+end
 ```
 
-N
+Porém, no nosso exemplo, também delegamos o método `each`, dessa vez para `@collection`.
+
+Dadas essas explicações, podemos testar:
+
+```ruby
+p1 = Points::Point.new(3, 4)
+p2 = Points::Point.new(5, 12)
+p3 = Points::Point.new(8, 15)
+
+# alguns metodos adicionados
+# pelo Comparable:
+p1 > p2 # => false
+p1 < p2 # => true
+
+# será que é verdade?
+Point::Module[*p1]
+# => 5.0
+Point::Module[*p2]
+# => 13.0
+
+collection = Points[p1, p2, p3]
+# => <Points @collection=[#<Points::Point @x=3, @y=4>, ...]>
+
+# podemos testar os métodos de
+# Enumerable:
+collection.any? {|p| p.x == 10 }
+# => false
+collection.filter { |p| Points::Module[*p] > 13.0 }
+# => [<Points::Point @x=8, @y=15>]
+```
+
+Como implementamos tanto `Enumerable` na coleção, quanto `Comparable` no item, podemos também usar os métodos de ordenação de `Enumarable`:
+
+```ruby
+collection.max
+# => <Points::Point @x=8, @y=15>
+collection.min
+# => <Points::Point @x=3, @y=4>
+```
+
+## Referências
+
+Apesar dessa postagem ser exaustiva, vários detalhes ficaram de fora. Por isso, recomendo a leitura do material em que me baseei para escrever essa postagem:
+
+* [Constants Refresher](https://guides.rubyonrails.org/autoloading_and_reloading_constants_classic_mode.html#constants-refresher)
+* [Modules and Classes](https://ruby-doc.org/core-2.7.2/doc/syntax/modules_and_classes_rdoc.html)
+* [Documentação de *Module*](https://ruby-doc.org/core-2.7.2/Module.html)
+* [Lista de métodos de *Enumerable*](https://ruby-doc.org/core-2.7.2/Enumerable.html)
+* [Lista de métodos de *Comparable*](https://ruby-doc.org/core-2.7.2/Comparable.html)
+
+## Agradecimentos
+
+Gostaria de agradecer mais uma vez ao [@serradura](https://github.com/serradura/) que me incentivou muito a escrever sobre isso e por sempre me ajudar com sugestões e dicas para a [minha gem](https://github.com/tomascco/pokecli). Obrigado!
