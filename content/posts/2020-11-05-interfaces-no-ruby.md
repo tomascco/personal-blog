@@ -22,10 +22,10 @@ O termo interface aqui, vai ser utilizado no seu sentido mais geral, que na minh
 Logo, as funcionalidades apresentadas a seguir, de alguma forma, definem maneiras específicas de realizar certas ações e caso não implementadas, levantam erros.
 
 1. [Métodos especiais](https://tomascco.dev/posts/interfaces-no-ruby) (esse post)
-2. Mixins (em breve...)
-3. Duck typing (em breve...)
-4. Blocos (em breve...)
-5. *Keyword arguments* (em breve...)
+2. [Assinaturas de métodos](https://tomascco.dev/posts/assinatura-de-metodos)
+3. [Módulos, Classes e Constantes](https://tomascco.dev/posts/modulos-classes-e-constantes)
+4. Duck typing (em breve...)
+5. Blocos (em breve...)
 
 ### Métodos *syntactic sugar*
 

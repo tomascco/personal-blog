@@ -19,10 +19,10 @@ Uma das mudanças que tem dado mais dor de cabeça nessa transição é a da sep
 Aproveitando essa mudança, hoje vamos falar de assinatura de métodos (respeitando essa mudança do do Ruby 3) e como elas são importantíssimas para a criação de interfaces.
 
 1. [Métodos especiais](https://tomascco.dev/posts/interfaces-no-ruby)
-2. Mixins (em breve...)
-3. Duck typing (em breve...)
-4. Blocos (em breve...)
-5. [Assinaturas de métodos](https://tomascco.dev/posts/assinatura-de-metodos) (esse post)
+2. [Assinaturas de métodos](https://tomascco.dev/posts/assinatura-de-metodos) (esse post)
+3. [Módulos, Classes e Constantes](https://tomascco.dev/posts/modulos-classes-e-constantes)
+4. Duck typing (em breve...)
+5. Blocos (em breve...)
 
 ## O que são assinaturas de métodos e qual sua importância?
 

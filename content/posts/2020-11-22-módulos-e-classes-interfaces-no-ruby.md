@@ -24,10 +24,10 @@ Nesse post, como sempre, não pretendo ditar como e quando cada ferramenta deve 
 Logo, podemos começar a estudar quais ferramentas o Ruby oferece para a organização do código de maneira geral.
 
 1. [Métodos especiais](https://tomascco.dev/posts/interfaces-no-ruby)
-2. [Módulos, Classes e Constantes](https://tomascco.dev/posts/modulos-classes-e-constantes) (esse post)
-3. Duck typing (em breve...)
-4. Blocos (em breve...)
-5. [Assinaturas de métodos](https://tomascco.dev/posts/assinatura-de-metodos)
+2. [Assinaturas de métodos](https://tomascco.dev/posts/assinatura-de-metodos)
+3. [Módulos, Classes e Constantes](https://tomascco.dev/posts/modulos-classes-e-constantes) (esse post)
+4. Duck typing (em breve...)
+5. Blocos (em breve...)
 
 ## Módulos
 
