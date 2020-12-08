@@ -59,12 +59,14 @@ ary.sort { |a, b| a <=> b }
 
 # para blocos multilinha
 ary do |a, b|
+  # ...
   a <=> b
 end
 
 # pouco utilizado
 # prefira o do...end
 ary.sort { |a, b|
+  # ...
   a <=> b
 }
 ```
@@ -136,8 +138,91 @@ Veja que nesse método, além de chamar o bloco, também são impressas informa�
 
 ### `yield`
 
-Para métodos em que não precisamos fazer nenhuma manipulação com o bloco, podemos chamar 
+Significando *conceder; dar o controle* em inglês, a palavra `yield` "concede" o fluxo de execução para o bloco dado pelo usuário ao invocar o método e retorna o resultado da última expressão para o método. Para entender melhor veja os exemplos abaixo: 
 
+```ruby
+# aqui damos yield no objeto passado
+# pelo usuário, logo vemos que o 
+# argumento do método virará o 
+# argumento do bloco
+def yielder(obj)
+  yield(obj)
+end
+
+yielder('Hello') do |str|
+  str << ' World'
+end
+
+# o yield resulta em um
+# valor que pode ser manipulado
+# ou atribuido a uma variável
+def sum_ten_with_block
+  number = yield
+  
+  number + 10
+end
+# ou
+def sum_ten_with_block
+  yield + 10
+end
+
+# como o resultado da ultima
+# expressão do bloco é 5
+# yield vai retornar 5
+sum_ten_with_block { 5 }
+# => 15
 ```
 
+### `block_given?`
+
+Ao usar o `yield` podemos encontrar dificuldades, pois não temos como verificar se um bloco foi passado ou não para nosso método, já que usando `&block` poderíamos simplesmente perguntar `block.nil?`. Para resolver esse problema, o módulo `Kernel` nos oferece a função `block_given?`.
+
+```ruby
+def yielder(obj)
+  return yield(obj) if block_given?
+  
+  'Nenhum bloco fornecido'
+end
+
+yielder(6)
+# => "Nenhum bloco fornecido"
+
+yielder(6) do |n|
+  n + 14
+end
+# => 20
+```
+
+> Observe a expressão `yield if block_given?`. Ela só executa o bloco se for passado algum para o método. Além disso, na mesma linha, foi utilizada e estratégia de *[guard clause](https://campuscode.com.br/conteudos/guard-clause-em-ruby)* para evitar o uso de um if/else, deixando o código mais legível
+
+## Lambdas
+
+São um tipo especial de `Proc` mais "rigoroso". Sua principal diferença para os *procs* é a checagem estrita dos parâmatros passados, levantando `ArgumentError` no caso de argumentos a mais ou a menos. Fora isso, há também outras diferenças importantes, que podem ser conferidas [nesse tópico](https://ruby-doc.org/core-2.7.2/Proc.html#class-Proc-label-Lambda+and+non-lambda+semantics) da documentação.
+
+```ruby
+# declarando lambdas
+lambda_func = lambda do |a, b|
+  [a, b]
+end
+# ou (sintaxe literal)
+lambda_func = ->(a, b) do
+  [a, b]
+end
+
+proc_func = proc { |a, b| [a, b] }
+end
+
+lambda_func.call(4)
+# ArgumentError (wrong number of arguments (given 1, expected 2))
+
+proc_func.call(4)
+# => [4, nil]
+
+# outras maneiras de chamar
+# lambdas ou procs:
+lambda_func.(4, 5)
+# => [4, 5]
+
+proc_func[7, 8]
+# => [7, 8]
 ```
