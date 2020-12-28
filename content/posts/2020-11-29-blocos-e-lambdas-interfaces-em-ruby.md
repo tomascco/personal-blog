@@ -24,15 +24,15 @@ end
 # oi
 # ...
 
-[1, 2, 3].map do {|n| n + 3 }
+[1, 2, 3].map do { |n| n + 3 }
 # => [4, 5, 6]
 ```
 
-Os blocos são geralmente usados para declarar uma transformação ou procedimentos para serem passados executados em coleções ou em objetos. Além disso, [podem ser usados para substituir estruturas de repetição](https://rubystyle.guide/#no-for-loops) como o `for`. Outro uso bastante comum é em linguagens específicas de domínio (como as [rotas do Rails](https://guides.rubyonrails.org/routing.html)).
+Os blocos são geralmente usados para declarar uma transformação ou procedimentos para serem executados em coleções ou em objetos. Além disso, [podem ser usados para substituir estruturas de repetição](https://rubystyle.guide/#no-for-loops) como o `for`. Outro uso bastante comum é em linguagens específicas de domínio (como as [rotas do Rails](https://guiarails.com.br/routing.html)).
 
 1. [Métodos especiais](https://tomascco.dev/posts/interfaces-no-ruby)
 2. [Assinaturas de métodos](https://tomascco.dev/posts/assinatura-de-metodos)
-3. [Módulos, Classes e Constantes](https://tomascco.dev/posts/modulos-classes-e-constantes) (esse post)
+3. [Módulos, Classes e Constantes](https://tomascco.dev/posts/modulos-classes-e-constantes)
 4. [Blocos e Lambdas](https://tomascco.dev/posts/blocos-e-lambdas) (esse post)
 5. Duck typing (em breve...)
 
@@ -48,7 +48,7 @@ Utilizando o exemplo do método `Array#sort`, podemos pesquisar sua referência 
 >
 > sort {|a, b| block} → new_ary
 
-Vemos que existem duas sintaxes possíveis para esse método, no caso estamos interessados pela segunda. Podemos observar que `sort` pode receber um bloco com dois argumentos. Se lermos a descrição do método no link acima, vemos que o bloco é a função de comparação a ser usada para ordenar os elementos da Array, por isso são aceitos dois argumentos, eles são representações de elementos da Array. Um exemplo seria o seguinte:
+Vemos que existem duas sintaxes possíveis para esse método, no caso estamos interessados na segunda. Podemos observar que `sort` pode receber um bloco com dois argumentos. Se lermos a descrição do método no link acima, vemos que o bloco é a função de comparação a ser usada para ordenar os elementos da Array, por isso são aceitos dois argumentos, eles são representações de elementos da Array. Um exemplo seria o seguinte:
 
 ```ruby
 ary = [5, 9, 10, 2, 4, 3, 7]
@@ -71,7 +71,7 @@ ary.sort { |a, b|
 }
 ```
 
-Também é possível passar um objeto da classe [Proc](https://ruby-doc.org/core-2.7.2/Proc.html) para um método que aceita blocos, utilizando `&` antes do nome da variável, para sinalizar que aquela variável contém o bloco a ser chamado pelo método e não como argumento:
+Também é possível passar um objeto da classe [Proc](https://ruby-doc.org/core-2.7.2/Proc.html) para um método que aceita blocos, utilizando `&` antes do nome da variável, para sinalizar que aquela variável é o bloco a ser usado pelo método e não um argumento:
 
 ```ruby
 bloco = Proc.new do |a, b|
@@ -83,6 +83,7 @@ ary.sort(bloco)
 # ArgumentError (wrong number of arguments (given 1, expected 0))
 # tomamos um erro pois o bloco
 # é considerado um argumento
+# e o sort não aceita argumentos
 
 ary.sort(&bloco)
 # olá
@@ -93,11 +94,11 @@ ary.sort(&bloco)
 
 ## Criando métodos com blocos
 
-Métodos que aceitam blocos são aqueles que recebem **um** argumento com `&` antes de seu nome (também deve ser o último da lista de argumentos) ou que utiliza a palavra-chave `yield`.
+Métodos que aceitam blocos são aqueles que recebem **um** argumento com `&` antes de seu nome (e que deve ser o último da lista de argumentos) ou métodos que utilizam a palavra reservada `yield`.
 
 ### `&block`
 
-Esse argumento, na maioria das vezes, recebe o nome de `block` por convenção. Ele é utilizado quando se pretende manipular o bloco de alguma maneira (ele é uma instância de [Proc](https://ruby-doc.org/core-2.7.2/Proc.html)) ou quando se quer enviar o bloco para outro método (delegar). Um exemplo disso seria o exemplo (modificado) da postagem passada:
+Esse argumento, na maioria das vezes, recebe o nome de `block` por convenção. Ele é utilizado quando se pretende manipular o bloco de alguma maneira (ele é uma instância de [Proc](https://ruby-doc.org/core-2.7.2/Proc.html)) ou quando se quer enviar o bloco para outro método (delegar). Um exemplo disso seria o exemplo (modificado) da [postagem passada](https://tomascco.dev/posts/modulos-classes-e-constantes):
 
 ```ruby
 class Points
@@ -116,23 +117,21 @@ end
 Nele podemos ver que o argumento de bloco `block` é repassado para o método each de `@collection` (uma Array). Note que `&` somente denota que `block` é um argumento de bloco. Como foi dito antes, `block` pode ser manipulado a vontade dentro do método:
 
 ```ruby
-def method_with_block(&block)
+def inspect_and_call_block(&block)
   p block.class
   p block.parameters
-  block.call(5)
+  block.call(5, '10')
 end
 
-method_with_block do |a, b|
+inspect_and_call_block do |a, b|
   [a, b]
 end
 # Proc
 # [[[:opt, :a], [:opt, :b]]
-# => [5, nil]
+# => [5, "10"]
 ```
 
-> Note que só foi passado um argumento ao método `call`, porém o bloco foi chamado com dois argumentos. Quando isso acontece, como podemos ver, os argumentos adicionais tomam o valor `nil`.
->
-> Note também que o valor retornado ao se chamar um bloco é o valor de sua última expressão.
+> Note também que o valor retornado ao se chamar um bloco é o valor de sua última expressão. Como chamamos o bloco na última linha do método, o retorno do método será o retorno do bloco 🤔.
 
 Veja que nesse método, além de chamar o bloco, também são impressas informações sobre o bloco em si.
 
@@ -143,7 +142,7 @@ Significando *conceder; dar o controle* em inglês, a palavra `yield` "concede" 
 ```ruby
 # aqui damos yield no objeto passado
 # pelo usuário, logo vemos que o 
-# argumento do método virará o 
+# argumento do método se tornará o 
 # argumento do bloco
 def yielder(obj)
   yield(obj)
@@ -152,6 +151,8 @@ end
 yielder('Hello') do |str|
   str << ' World'
 end
+# => "Hello World"
+
 
 # o yield resulta em um
 # valor que pode ser manipulado
@@ -168,7 +169,7 @@ end
 
 # como o resultado da ultima
 # expressão do bloco é 5
-# yield vai retornar 5
+# o yield vai retornar 5
 sum_ten_with_block { 5 }
 # => 15
 ```
@@ -193,11 +194,11 @@ end
 # => 20
 ```
 
-> Observe a expressão `yield if block_given?`. Ela só executa o bloco se for passado algum para o método. Além disso, na mesma linha, foi utilizada e estratégia de *[guard clause](https://campuscode.com.br/conteudos/guard-clause-em-ruby)* para evitar o uso de um if/else, deixando o código mais legível
+> Observe a expressão `yield if block_given?`. Ela só executa o bloco se for passado algum para o método. Além disso, na mesma linha, foi utilizada e estratégia de *[guard clause](https://campuscode.com.br/conteudos/guard-clause-em-ruby)* para evitar o uso de um if/else, deixando o código mais legível!
 
 ## Lambdas
 
-São um tipo especial de `Proc` mais "rigoroso". Sua principal diferença para os *procs* é a checagem estrita dos parâmatros passados, levantando `ArgumentError` no caso de argumentos a mais ou a menos. Fora isso, há também outras diferenças importantes, que podem ser conferidas [nesse tópico](https://ruby-doc.org/core-2.7.2/Proc.html#class-Proc-label-Lambda+and+non-lambda+semantics) da documentação.
+São um tipo especial de `Proc` mais "rigoroso". Sua principal diferença para os *procs* é a checagem estrita dos parâmatros passados, levantando `ArgumentError` no caso de argumentos a mais ou a menos, assim como acontece com os métodos. Fora isso, há também outras diferenças importantes, que podem ser conferidas [nesse tópico](https://ruby-doc.org/core-2.7.2/Proc.html#class-Proc-label-Lambda+and+non-lambda+semantics) da documentação.
 
 ```ruby
 # declarando lambdas
@@ -210,7 +211,6 @@ lambda_func = ->(a, b) do
 end
 
 proc_func = proc { |a, b| [a, b] }
-end
 
 lambda_func.call(4)
 # ArgumentError (wrong number of arguments (given 1, expected 2))
@@ -226,3 +226,57 @@ lambda_func.(4, 5)
 proc_func[7, 8]
 # => [7, 8]
 ```
+
+### Argumentos
+
+As funções Lambda usam a mesma sintaxe de declaração de argumentos que os métodos. Logo, podemos usar *splats*, *keyword arguments*, *double splat*!
+
+```ruby
+func = ->(a, b = 2, *c, key:, options: nil, **rest) do
+# ...
+end
+```
+
+Se você não sabe para que serve alguma das sintaxes acima, recomendo fortemente a leitura do post [Assinaturas de métodos](https://tomascco.dev/posts/assinatura-de-metodos).
+
+### Clausuras (*Closures*)
+
+Para qualquer linguagem de programação com suporte a recursos funcionais e Lambdas, o conceito de [Clausura](https://pt.wikipedia.org/wiki/Clausura_(ci%C3%AAncia_da_computa%C3%A7%C3%A3o)) é essencial. Basicamente, o suporte a closures significa que um Lambda "se lembra" do ambiente em que foi criado. Para entender melhor esse conceito, podemos escrever o seguinte Lambda:
+
+```ruby
+adder = ->(x) do
+  ->(y) { x + y }
+end
+```
+
+Se você nunca viu nada parecido antes, pode demorar bastante ou até não entender o que esse código faz. A complicação é que quando chamado, esse código retorna outro Lambda. O resultado retornado "se lembra" do valor de `x` com que foi gerado e por isso, quando chamado novamente (com um argumento `y`) devolve um resultado. Para ilustrar melhor, podemos ver esse código funcionando:
+
+```ruby
+add5 = adder.call(5)
+# é o equivalente por substituir
+# x por 5 na nossa definição
+# original e retornar o lambda
+# resultante, logo:
+# add5 == ->(y) { 5 + y }
+
+add5.call(6)
+# => 11
+```
+
+Apesar da utilidade disso, é preciso tomar cuidado com as *closures*, pois elas não só "lembram" do estado atual, mas também podem modificar o estado que envolve o lambda.
+
+```ruby
+counter = -> do
+  i = 0
+  -> { i += 1 }
+end
+
+
+c1 = counter.call
+
+puts c1.call
+puts c1.call
+puts c1.call
+```
+
+Podemos observar que o resultado do lambda `c1` não depende dos seus argumentos e sim da quantidade de vezes que foi executada. Logo, `c1` não é uma [função pura](https://pt.stackoverflow.com/a/255560).
