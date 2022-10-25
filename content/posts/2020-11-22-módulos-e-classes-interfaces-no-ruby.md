@@ -665,7 +665,7 @@ collection.min
 
 Apesar dessa postagem ser exaustiva, vários detalhes ficaram de fora. Por isso, recomendo a leitura do material em que me baseei para escrever essa postagem:
 
-* [Constants Refresher](https://guides.rubyonrails.org/autoloading_and_reloading_constants_classic_mode.html#constants-refresher)
+* [Constants Refresher](https://guides.rubyonrails.org/v6.1/autoloading_and_reloading_constants_classic_mode.html#constants-refresher)
 * [Modules and Classes](https://ruby-doc.org/core-2.7.2/doc/syntax/modules_and_classes_rdoc.html)
 * [Documentação de *Module*](https://ruby-doc.org/core-2.7.2/Module.html)
 * [Lista de métodos de *Enumerable*](https://ruby-doc.org/core-2.7.2/Enumerable.html)
