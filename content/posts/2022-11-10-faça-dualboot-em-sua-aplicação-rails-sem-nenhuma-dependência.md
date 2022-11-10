@@ -55,6 +55,7 @@ ln -s Gemfile Gemfile.next
   conteúdo de um arquivo que já existe e conhecemos bem: `Gemfile` e esse apelido é
   `Gemfile.next`
 
+
 2. No seu `Gemfile`, adicione o seguinte código no começo do arquivo:
 
 ```ruby
@@ -68,6 +69,7 @@ end
   método `next?` retornará `false`. Agora se utilizarmos o nome `Gemfile.next` para se
   referir ao mesmo conteúdo, o método `next?` irá retornar `true`! Logo, com um
   "conteúdo", conseguimos dois comportamentos diferentes.
+
 
 3. Defina condicionalmente quais quais serão as dependências de sua versão *next*.
 
@@ -87,6 +89,7 @@ end
 
 * Podemos replicar também o exemplo acima para outras gems!
 
+
 4. Faça bundle de sua versão *next* pela primeira vez e faça commit do arquivo
    `Gemfile.next.lock` do mesmo jeito que é feito com o arquivo `Gemfile.lock`:
 
@@ -105,6 +108,7 @@ BUNDLE_GEMFILE="Gemfile.next" bundle
 ```
 
 para atualizar os **dois** arquivos *.lock*.
+
 
 5. Seja feliz!
 
