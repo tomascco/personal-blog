@@ -92,7 +92,7 @@ ary.sort(&bloco)
 # => [2, 3, 4, 5, 7, 9, 10]
 ```
 
-## Criando métodos com blocos
+## Criando métodos que aceitam blocos
 
 Métodos que aceitam blocos são aqueles que recebem **um** argumento com `&` antes de seu nome (e que deve ser o último da lista de argumentos) ou métodos que utilizam a palavra reservada `yield`.
 
